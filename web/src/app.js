@@ -3,10 +3,13 @@ import './layout.scss';
 import $ from 'jquery';
 import Navigo from 'navigo';
 import Locale from './locale';
+import API from './api';
+
 
 const PartialLoading = require('./loading.html');
 const Error404 = require('./404.html');
 const router = new Navigo(WEB_ROOT);
+const api = new API(router);
 const OfflinePlugin = require('offline-plugin/runtime');
 
 window.i18n = new Locale(navigator.language);
@@ -41,3 +44,25 @@ OfflinePlugin.install({
   
   onUpdated: function() { }
 });
+
+
+router.on({
+  '/': function () {
+    if (api.account.loggedIn()) {
+      console.log('user is already logged in, lets show their assets');
+    } else {
+      console.log('user is not logged in, lets create a wallet for them');
+    }
+  },
+  '/account': function () {
+    if (api.account.loggedIn()) {
+      console.log('user is already logged in, lets show their assets');
+    } else {
+      console.log('user is not logged in, lets create a wallet for them');
+    }
+  }
+}).notFound(function () {
+  $('#layout-container').html(Error404());
+  $('body').attr('class', 'error layout');
+  router.updatePageLinks();
+}).resolve();
