@@ -4,6 +4,7 @@ import $ from 'jquery';
 import Navigo from 'navigo';
 import Locale from './locale';
 import API from './api';
+import Wallet from './wallet';
 
 
 const PartialLoading = require('./loading.html');
@@ -52,6 +53,7 @@ router.on({
       console.log('user is already logged in, lets show their assets');
     } else {
       console.log('user is not logged in, lets create a wallet for them');
+      new Wallet(api).newWallet();
     }
   },
   '/account': function () {
@@ -59,6 +61,7 @@ router.on({
       console.log('user is already logged in, lets show their assets');
     } else {
       console.log('user is not logged in, lets create a wallet for them');
+      new Wallet(api).newWallet();
     }
   }
 }).notFound(function () {
