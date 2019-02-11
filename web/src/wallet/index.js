@@ -28,9 +28,13 @@ Wallet.prototype = {
       keyPair.prvKeyObj.isPrivate = true;
       var privateKey = KJUR.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS1PRV");
       var publicKey = KJUR.KEYUTIL.getPEM(keyPair.pubKeyObj);
-      console.log(keyPair);
-      console.log(privateKey);
-      console.log(publicKey);
+
+      self.api.mixin.createUser(function(resp) {
+        if (resp.error) {
+          return;
+        }
+        window.location.href = '/account';
+      }, privateKey, publicKey, pin);
     });
   },
 
