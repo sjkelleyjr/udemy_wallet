@@ -2,9 +2,8 @@ import './index.scss';
 import $ from 'jquery';
 import KJUR from 'jsrsasign';
 
-
 function Wallet(api) {
-  this.api = api
+  this.api = api;
   this.templateIndex = require('./index.html');
 }
 
@@ -16,7 +15,6 @@ Wallet.prototype = {
     $('body').attr('class', 'wallet layout');
 
     $('.action.create').on('click', function () {
-      console.log('client wants to create a new user.')
       const pin = $('[name="pin"]').val();
 
       if (pin.length !== 6) {
@@ -28,7 +26,7 @@ Wallet.prototype = {
       keyPair.prvKeyObj.isPrivate = true;
       var privateKey = KJUR.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS1PRV");
       var publicKey = KJUR.KEYUTIL.getPEM(keyPair.pubKeyObj);
-
+    
       self.api.mixin.createUser(function(resp) {
         if (resp.error) {
           return;
@@ -36,6 +34,11 @@ Wallet.prototype = {
         window.location.href = '/account';
       }, privateKey, publicKey, pin);
     });
+
+    $('.action.import').on('click', function () {
+      window.location.href = '/account/import';
+    });
+
   },
 
 };
