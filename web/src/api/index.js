@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import Noty from 'noty';
 import Account from './account.js';
+import Asset from './asset.js';
 import Mixin from './mixin.js';
 import forge from 'node-forge';
 import moment from 'moment';
@@ -12,6 +13,9 @@ function API(router) {
   this.router = router;
   this.account = new Account(this);
   this.mixin = new Mixin(this);
+  this.asset = new Asset(this);
+  this.Error404 = require('../404.html');
+  this.ErrorGeneral = require('../error.html');
 }
 
 API.prototype = {
@@ -40,6 +44,7 @@ API.prototype = {
     var sPayload = JSON.stringify(oPayload);
     return KJUR.jws.JWS.sign('RS512', sHeader, sPayload, privateKey);
   },
+  
   request: function (method, path, params, callback) {
     var url = 'https://api.mixin.one' + path;
     var token = '';

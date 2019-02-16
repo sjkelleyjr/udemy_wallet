@@ -32,6 +32,12 @@ Mixin.prototype = {
     });
   },
 
+  assets: function (callback) {
+    this.api.request('GET', '/assets', undefined, function (resp) {
+      return callback(resp);
+    });
+  },
+
   updatePIN: function (callback, old_pin, pin) {
     let params = {
       old_pin : old_pin,

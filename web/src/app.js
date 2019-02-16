@@ -4,6 +4,7 @@ import $ from 'jquery';
 import Navigo from 'navigo';
 import Locale from './locale';
 import API from './api';
+import Asset from './asset';
 import Wallet from './wallet';
 
 
@@ -49,8 +50,10 @@ OfflinePlugin.install({
 
 router.on({
   '/': function () {
+    api.account.clear()
     if (api.account.loggedIn()) {
       console.log('user is already logged in, lets show their assets');
+      new Asset(router, api).assets();
     } else {
       console.log('user is not logged in, lets create a wallet for them');
       new Wallet(api).newWallet();
@@ -59,6 +62,7 @@ router.on({
   '/account': function () {
     if (api.account.loggedIn()) {
       console.log('user is already logged in, lets show their assets');
+      new Asset(router, api).assets();
     } else {
       console.log('user is not logged in, lets create a wallet for them');
       new Wallet(api).newWallet();
