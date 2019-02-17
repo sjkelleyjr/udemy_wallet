@@ -32,8 +32,56 @@ Mixin.prototype = {
     });
   },
 
+  info: function (callback) {
+    this.api.request('GET', '/me', undefined, function(resp) {
+      return callback(resp);
+    });
+  },
+
+  withdrawal: function (callback, asset, form) {
+    const self = this;
+
+    var params = {
+      asset_id : asset.asset_id,
+      pin : self.encryptedPin(form.pin)
+    };
+    if (asset.public_key) {
+      params['label'] = asset.symbol;
+      params['public_key'] = form.public_key;
+    } else if (asset.account_tag && asset.account_name) {
+      params['account_tag'] = form.account_tag;
+      params['account_name'] = form.account_name;
+    }
+
+    //we need to call addresses in order to get the address id for the public key.
+    this.api.request('POST', '/addresses', params, function(resp) {
+      if (resp.error) {
+        return callback(resp);
+      }
+
+      params = {
+        address_id: resp.data.address_id,
+        amount: form.amount,
+        pin: self.encryptedPin(form.pin),
+        trace_id: form.trace,
+        memo: 'From Mixin Wallet'
+      };
+
+      //now that we have the address_id, we can use it to actually withdraw to the address.
+      self.api.request('POST', '/withdrawals', params, function(resp) {
+        return callback(resp);
+      });
+    });
+  },
+
   assets: function (callback) {
     this.api.request('GET', '/assets', undefined, function (resp) {
+      return callback(resp);
+    });
+  },
+
+  asset: function (callback, id) {
+    this.api.request('GET', '/assets/' + id, undefined, function (resp) {
       return callback(resp);
     });
   },

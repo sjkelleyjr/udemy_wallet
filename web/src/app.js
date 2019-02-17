@@ -59,6 +59,12 @@ router.on({
       new Wallet(api).newWallet();
     }
   },
+  '/account/:id/deposit': function (params) {
+    new Asset(router, api).asset(params['id'], 'DEPOSIT');
+  },
+  '/account/:id/withdrawal': function (params) {
+    new Asset(router, api).asset(params['id'], 'WITHDRAWAL');
+  },
   '/account': function () {
     if (api.account.loggedIn()) {
       console.log('user is already logged in, lets show their assets');
